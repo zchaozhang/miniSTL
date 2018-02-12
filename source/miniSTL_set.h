@@ -26,7 +26,7 @@ namespace zzc {//
         using const_pointer   = const pointer;
         using reference       = typename rep_type::reference;
         using const_reference = const reference;
-        using iterator        = const typename rep_type::iterator;
+        using iterator        = typename rep_type::iterator;
         using const_iterator  = iterator;
 
         set() : t(Compare{}){};

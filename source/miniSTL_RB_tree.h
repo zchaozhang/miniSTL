@@ -506,7 +506,7 @@ namespace zzc {
         static link_type&  parent(base_ptr x) { return reinterpret_cast<link_type&>(x->parent);}
         static reference   value(base_ptr x) { return reinterpret_cast<link_type&>(x)->value;}
         static color_type& color(base_ptr x) { return x->color;}
-        static const Key& key(base_ptr x) { return KeyOfValue{}(value(x));}
+        static Key key(base_ptr x) { return KeyOfValue{}(value(x));}
 
         static link_type& minimum(link_type x) {
             return static_cast<link_type&>(__rb_tree_node_base::minimum(x));
@@ -540,7 +540,7 @@ namespace zzc {
         rb_tree() : node_count(0), key_compare(){ init(); }
         explicit rb_tree(Compare const& compe) : node_count(0), key_compare{compe} {init();}
         iterator begin() { return iterator{leftmost()}; }
-        iterator end() { return iterator{rightmost()}; }
+        iterator end() { return iterator{header}; }
         bool empty() { return node_count == 0; }
         size_t size() { return node_count;}
         pair<typename rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::iterator, bool>
@@ -573,9 +573,7 @@ namespace zzc {
         link_type x = static_cast<link_type>(_x);
         link_type y = static_cast<link_type>(_y);
 
-//        if (x == nullptr) {
-//            std::cout << "x = null" << std::endl;
-//        }
+
 
         link_type z;
         if (y == header || x != nullptr || key_compare(KeyOfValue{}(v), key(y))) {
@@ -612,7 +610,6 @@ namespace zzc {
         while (x != nullptr) {
             y = x;
             comp = key_compare(KeyOfValue{}(v), key(x));
-
             x = comp ? left(x) : right(x);
         }
         //离开while后，y所指即插入点之父节点
